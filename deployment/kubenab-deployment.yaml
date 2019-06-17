@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kubenab-deployment
+  labels:
+    app: kubenab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kubenab
+    spec:
+      containers:
+      - name: kubenab
+        image: docker.bintray.io/kubexray:0.0.5
+        imagePullPolicy: Always
+        env:
+          - name: DOCKER_REGISTRY_URL
+            value: "kubenab"
+          - name: REGISTRY_SECRET_NAME
+            value: 'regsecret'
+          - name: WHITELIST_NAMESPACES
+            value: "kube-system,default"
+          - name: WHITELIST_REGISTRIES
+            value: "kubenab"
+        ports:
+          - containerPort: 443
+            name: https
+        volumeMounts:
+        - name: tls
+          mountPath: /etc/admission-controller/tls
+        resources: {}
+      volumes:
+        - name: tls
+          secret:
+            secretName: kubenab-certs

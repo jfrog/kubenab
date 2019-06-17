@@ -1,0 +1,17 @@
+apiVersion: v1
+appVersion: "0.0.5"
+description: A Helm chart for Kubenab
+name: kubenab
+version: 0.2.1
+keywords:
+- DevOps
+- helm
+- kubernetes
+- docker
+home: https://github.com/kubenab/kubenab
+sources:
+- https://github.com/kubenab/kubenab
+maintainers:
+- name: kubenab
+  email: jainishshah@yahoo.com
+icon: https://raw.githubusercontent.com/kubenab/containerize-go-microservice/master/static/logo.jpg

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubenab
+  labels:
+    app: kubenab
+spec:
+  type: ClusterIP
+  ports:
+  - port: 443
+    protocol: "TCP"
+    name: https
+  selector:
+    app: kubenab

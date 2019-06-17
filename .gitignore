@@ -1,0 +1,9 @@
+bin/
+files/
+tmp/
+credentials/
+override-values.yaml
+artifactory.creds*
+SUBSTITUTIONS
+.idea
+.vscode
