@@ -1,0 +1,80 @@
+{{- if not .Values.tls.secretName -}}
+{{- if or .Values.mutatingWebhook.enabled .Values.validatingWebhook.enabled }}
+---
+# Create a selfsigned Issuer, in order to create a root CA certificate for
+# signing kubenab serving certificates
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: {{ include "kubenab.selfSignedIssuer" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selfSigned: {}
+
+---
+
+# Generate a CA Certificate used to sign certificates for the kubenab
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ include "kubenab.rootCACertificate" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  secretName: {{ include "kubenab.rootCACertificate" . }}
+  duration: 43800h # 5y
+  issuerRef:
+    name: {{ include "kubenab.selfSignedIssuer" . }}
+  commonName: "ca.kubenab.kubenab"
+  isCA: true
+
+---
+
+# Create an Issuer that uses the above generated CA certificate to issue certs
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Issuer
+metadata:
+  name: {{ include "kubenab.rootCAIssuer" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  ca:
+    secretName: {{ include "kubenab.rootCACertificate" . }}
+
+---
+
+# Finally, generate a serving certificate for the kubenab to use
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ include "kubenab.servingCertificate" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  secretName: {{ include "kubenab.servingCertificate" . }}
+  duration: 8760h # 1y
+  issuerRef:
+    name: {{ include "kubenab.rootCAIssuer" . }}
+  dnsNames:
+  - {{ include "kubenab.fullname" . }}
+  - {{ include "kubenab.fullname" . }}.{{ .Release.Namespace }}
+  - {{ include "kubenab.fullname" . }}.{{ .Release.Namespace }}.svc
+{{- end }}
+{{- end -}}

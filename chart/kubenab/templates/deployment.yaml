@@ -1,27 +1,29 @@
-apiVersion: apps/v1beta2
+{{- if .Values.docker.registryUrl }}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "kubenab.fullname" . }}
+  name: {{ include "kubenab.fullname" . }}
   labels:
-    app: {{ template "kubenab.name" . }}
-    chart: {{ template "kubenab.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "kubenab.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "kubenab.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "kubenab.name" . }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "kubenab.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      serviceAccountName: {{ include "kubenab.fullname" . }}
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-      - name: {{ .Values.imagePullSecrets }}
+        - name: {{ .Values.imagePullSecrets }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -41,23 +43,24 @@ spec:
               containerPort: 443
               protocol: TCP
           volumeMounts:
-          - name: tls
-            mountPath: /etc/admission-controller/tls
+            - name: tls
+              mountPath: /etc/admission-controller/tls
           resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     {{- with .Values.affinity }}
       affinity:
-{{ toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- with .Values.tolerations }}
       tolerations:
-{{ toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
         - name: tls
           secret:
-            secretName: {{ .Values.tlsSecretName }}
+            secretName: {{ .Values.tls.secretName | default (printf "%s" ( include "kubenab.servingCertificate" .)) }}
+{{- end }}

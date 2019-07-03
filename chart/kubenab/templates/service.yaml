@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "kubenab.fullname" . }}
+  name: {{ include "kubenab.fullname" . }}
   labels:
-    app: {{ template "kubenab.name" . }}
-    chart: {{ template "kubenab.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,5 +15,5 @@ spec:
       protocol: TCP
       name: https
   selector:
-    app: {{ template "kubenab.name" . }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
