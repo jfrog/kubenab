@@ -1,17 +1,19 @@
 apiVersion: v1
-appVersion: "0.0.5"
-description: A Helm chart for Kubenab
 name: kubenab
-version: 0.2.1
+version: 0.0.5
+appVersion: 0.3.0
+home: https://github.com/jfrog/kubenab
+description: Kubenab Helm chart
 keywords:
-- DevOps
+- devops
 - helm
 - kubernetes
 - docker
-home: https://github.com/kubenab/kubenab
+- jfrog
+- security
 sources:
-- https://github.com/kubenab/kubenab
+- https://github.com/jfrog/kubenab
 maintainers:
-- name: kubenab
-  email: jainishshah@yahoo.com
-icon: https://raw.githubusercontent.com/kubenab/containerize-go-microservice/master/static/logo.jpg
+- name: rimusz
+  email: rimasm@jfrog.com
+icon: https://raw.githubusercontent.com/jfrog/artifactory-dcos/master/images/jfrog_med.png

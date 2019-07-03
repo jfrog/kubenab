@@ -6,8 +6,51 @@ replicaCount: 1
 
 imagePullSecrets:
 
+image:
+  repository: docker.bintray.io/kubenab
+  # Note that by default we use appVersion to get image tag
+  # tag:
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 443
+
+docker:
+  registryUrl:
+  registrySecret: regsecret
+
+# Whitelist namespaces e.g "kubesystem,default,development"
+whitelistNamespaces: "kube-system,cert-manager"
+# Whitelist docker registries within non-whitelisted namespaces e.g "rimusz,10.110.50.0:5000,docker.artifactory.com"
+whitelistRegistries:
+
+# Set external secret for TLS certs, it disables SelfSigned certs from the cert-manager
+# Run script tls/gen-cert.sh to generate TLS certs and store them in kubenab-tls secret
+tls:
+  secretName: # kubenab-tls
+
+# Use ValidatingAdmissionWebhook only if you want to check pulling 
+# of docker image from a Private Docker Registry e.g JFrog Artifactory. 
+# If your container image does not contain REGISTRY_URL then Kubetug will deny request to run that pod.
+validatingWebhook:
+  enabled: true
+
+# Use MutatingAdmissionWebhook only if you want to enforce pulling 
+# of docker image from a Private Docker Registry e.g JFrog Artifactory. 
+# If your container image is nginx then Kubetug  will append REGISTRY_URL to it. e.g nginx will become someregistry/nginx
+mutatingWebhook:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
 ## Role Based Access Control
-## Ref: https://kubernetes.io/docs/admin/authorization/rbac/
 rbac:
   create: true
   role:
@@ -24,61 +67,8 @@ rbac:
       - watch
       - list
 
-## Service Account
-## Ref: https://kubernetes.io/docs/admin/service-accounts-admin/
-##
-serviceAccount:
-  create: true
-  ## The name of the ServiceAccount to use.
-  ## If not set and create is true, a name is generated using the fullname template
-  name:
-
-image:
-  repository: docker.bintray.io/kubexray
-  tag: 0.0.5
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: 443
-
-docker:
-  registryUrl: my-registry
-  registrySecret: regsecret
-
-# Whitelist namespaces e.g "kubesystem,default,development"
-whitelistNamespaces: "kube-system"
-# Whitelist docker registries within non-whitelisted namespaces e.g "kubenab,10.110.50.0:5000,docker.artifactory.com"
-whitelistRegistries: 
-tlsSecretName: kubenab-certs
-
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - chart-example.local
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
-
-nodeSelector: {}
+affinity: {}
 
 tolerations: []
 
-affinity: {}
+nodeSelector: {}

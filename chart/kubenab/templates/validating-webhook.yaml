@@ -1,0 +1,30 @@
+{{- if .Values.validatingWebhook.enabled -}}
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "kubenab.fullname" . }}-validate
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    certmanager.k8s.io/inject-ca-from: "{{ .Release.Namespace }}/{{ include "kubenab.servingCertificate" . }}"
+webhooks:
+- name: kubenab-validate.jfrog.com
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    resources:
+    - pods
+  failurePolicy: Ignore
+  clientConfig:
+    service:
+      name: {{ include "kubenab.fullname" . }}
+      namespace: {{ .Release.Namespace }}
+      path: "/validate"
+{{- end -}}

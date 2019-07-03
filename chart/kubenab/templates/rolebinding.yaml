@@ -2,17 +2,17 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ template "kubenab.fullname" . }}
+  name: {{ include "kubenab.fullname" . }}
   labels:
-    app: {{ template "kubenab.name" . }}
-    chart: {{ template "kubenab.chart" . }}
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "kubenab.serviceAccountName" . }}
+  name: {{ include "kubenab.fullname" . }}
 roleRef:
   kind: Role
   apiGroup: rbac.authorization.k8s.io
-  name: {{ template "kubenab.fullname" . }}
+  name: {{ include "kubenab.fullname" . }}
 {{- end }}
