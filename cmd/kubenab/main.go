@@ -162,7 +162,14 @@ func handleContainer(container *v1.Container, dockerRegistryUrl string) bool {
 		message := fmt.Sprintf("Image is not being pulled from Private Registry: %s", container.Image)
 		log.Printf(message)
 
-		newImage := dockerRegistryUrl + "/" + container.Image
+		imageParts := strings.Split(container.Image, "/")
+		newImage := ""
+		if len(imageParts) < 3 {
+			newImage = dockerRegistryUrl + "/" + container.Image
+		} else {
+			imageParts[0] = dockerRegistryUrl
+			newImage = strings.Join(imageParts, "/")
+		}
 		log.Printf("Changing image registry to: %s", newImage)
 
 		container.Image = newImage
