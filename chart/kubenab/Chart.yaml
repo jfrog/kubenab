@@ -1,7 +1,7 @@
 apiVersion: v1
 name: kubenab
-version: 0.0.5
-appVersion: 0.3.0
+version: 0.0.6
+appVersion: 0.3.1
 home: https://github.com/jfrog/kubenab
 description: Kubenab Helm chart
 keywords:

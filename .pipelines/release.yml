@@ -73,7 +73,7 @@ pipelines:
                 versions:
                   - "1.12.5"
           environmentVariables:
-            TAG_NAME: $res_helm_hub_sync_release_gitTagName
+            TAG_NAME: $res_kubenab_release_gitTagName
             GITHUB_TOKEN: ${int_jfrogsolutionsci_github_token}
           inputResources:
             - name: kubenab_release
@@ -87,7 +87,7 @@ pipelines:
           onStart:
             - send_notification cpe_pipeline_slack --text "Starting kubenabRelease goreleaser v${TAG_NAME} ${step_name}_buildNumber=${run_number}" 
           onExecute:
-            - cd $res_helm_hub_sync_release_resourcePath
+            - cd $res_kubenab_release_resourcePath
             - ls
             - pwd
             - curl -sL https://raw.githubusercontent.com/goreleaser/get/master/get | VERSION=v0.115.0 bash

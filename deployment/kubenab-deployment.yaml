@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: kubenab
-        image: docker.bintray.io/kubexray:0.0.5
+        image: docker.bintray.io/kubexray:0.3.1
         imagePullPolicy: Always
         env:
           - name: DOCKER_REGISTRY_URL
