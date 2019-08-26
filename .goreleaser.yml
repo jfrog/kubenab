@@ -3,7 +3,7 @@ env:
   - GOPROXY=https://gocenter.io
 before:
   hooks:
-    - go mod download
+    - cd cmd/kubenab/ && go mod download
 builds:
   - main: cmd/kubenab/main.go
     binary: kubenab
