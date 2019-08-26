@@ -16,7 +16,7 @@ RUN cd cmd/kubenab && \
 
 # Build microservices
 RUN cd cmd/kubenab && \
-    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a --installsuffix cgo --ldflags="-s" -o /kubenab
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /kubenab
 
 FROM gcr.io/distroless/static
 
