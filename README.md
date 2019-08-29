@@ -1,5 +1,9 @@
 # Kubenab
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/jfrog/kubenab?style=flat-square)](https://goreportcard.com/report/github.com/jfrog/kubenab)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/jfrog/kubenab)
+[![Release](https://img.shields.io/github/release/jfrog/kubenab.svg?style=flat-square)](https://github.com/jfrog/kubenab/releases/latest)
+
 ### What does Kubenab do?
 Kubenab is Kubernetes Admission webhook to enforce pulling of docker images from private registry.
 
