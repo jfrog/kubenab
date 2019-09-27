@@ -19,6 +19,7 @@ service:
 docker:
   registryUrl:
   registrySecret: regsecret
+  replaceRegistryUrl: false
 
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"

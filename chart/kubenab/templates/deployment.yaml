@@ -38,6 +38,8 @@ spec:
               value: {{ .Values.whitelistNamespaces }}
             - name: WHITELIST_REGISTRIES
               value: {{ .Values.whitelistRegistries }}
+            - name: REPLACE_REGISTRY_URL
+              value: {{ .Values.docker.replaceRegistryUrl }}
           ports:
             - name: https
               containerPort: 443
