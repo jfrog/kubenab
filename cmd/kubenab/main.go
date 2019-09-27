@@ -122,7 +122,7 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 	admissionResponse.Allowed = true
 	if len(patches) > 0 {
 
-		// Add image pull secret patche
+		// Add image pull secret patch
 		patches = append(patches, patch{
 			Op:   "add",
 			Path: "/spec/imagePullSecrets",
