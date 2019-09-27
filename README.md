@@ -106,3 +106,10 @@ helm install --name kubenab --set docker.registrySecret=regsecret,docker.registr
 # Deploy nginx 
 kubectl apply -f test/nginx.yaml 
 ```
+
+
+## Benchmark
+
+Run the `benchmark.sh` Script in [`benchmark/`](./benchmark/), you only need
+`go`, `docker` and `openssl`.
+
