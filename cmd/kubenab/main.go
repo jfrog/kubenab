@@ -171,7 +171,8 @@ func handleContainer(container *v1.Container, dockerRegistryUrl string) bool {
 		newImage := ""
 
                 // pre-pend new Docker Registry Domain
-		if (len(imageParts) < 3) || replaceRegistryUrl {
+                repRegUrl, _ := strconv.ParseBool(replaceRegistryUrl) // we do not need to check for errors here, since we have done this already in checkArguments()
+                if (len(imageParts) < 3) || repRegUrl {
 			newImage = dockerRegistryUrl + "/" + container.Image
 		} else {
 			imageParts[0] = dockerRegistryUrl
