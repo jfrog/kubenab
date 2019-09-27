@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+        "strconv"
 
 	"k8s.io/api/admission/v1beta1"
 	"k8s.io/api/core/v1"
@@ -38,6 +39,9 @@ type patch struct {
 }
 
 func main() {
+        // check if all required Flags are set and in a correct Format
+        checkArguments()
+
 	flag.StringVar(&tlsCertFile, "tls-cert", "/etc/admission-controller/tls/tls.crt", "TLS certificate file.")
 	flag.StringVar(&tlsKeyFile, "tls-key", "/etc/admission-controller/tls/tls.key", "TLS key file.")
 	flag.Parse()
@@ -299,4 +303,20 @@ func containsRegisty(arr []string, str string) bool {
 func healthCheck(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	fmt.Fprintf(w, "Ok")
+}
+
+// check if all (required) Arguments are set and valid
+func checkArguments() {
+        if len(dockerRegistryUrl) == 0 {
+                log.Fatalln("Environment Variable 'DOCKER_REGISTRY_URL' not set")
+        }
+
+        if len(replaceRegistryUrl) == 0 {
+                log.Fatalln("Environment Variable 'REPLACE_REGISTRY_URL' not set")
+        }
+
+        _, err := strconv.ParseBool(replaceRegistryUrl)
+        if err != nil {
+                log.Fatalln("Invalid Value in Environment Variable 'REPLACE_REGISTRY_URL'")
+        }
 }
