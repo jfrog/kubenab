@@ -23,6 +23,7 @@ var (
 
 var (
 	dockerRegistryUrl     = os.Getenv("DOCKER_REGISTRY_URL")
+        replaceRegistryUrl    = os.Getenv("REPLACE_REGISTRY_URL")
 	registrySecretName    = os.Getenv("REGISTRY_SECRET_NAME")
 	whitelistRegistries   = os.Getenv("WHITELIST_REGISTRIES")
 	whitelistNamespaces   = os.Getenv("WHITELIST_NAMESPACES")
