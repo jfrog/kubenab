@@ -169,7 +169,9 @@ func handleContainer(container *v1.Container, dockerRegistryUrl string) bool {
 
 		imageParts := strings.Split(container.Image, "/")
 		newImage := ""
-		if len(imageParts) < 3 {
+
+                // pre-pend new Docker Registry Domain
+		if (len(imageParts) < 3) || replaceRegistryUrl {
 			newImage = dockerRegistryUrl + "/" + container.Image
 		} else {
 			imageParts[0] = dockerRegistryUrl
