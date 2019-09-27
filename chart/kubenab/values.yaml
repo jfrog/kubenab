@@ -19,7 +19,17 @@ service:
 docker:
   registryUrl:
   registrySecret: regsecret
-  replaceRegistryUrl: false
+
+  # Set to 'true' if you want that the original Registry URL will be
+  # replaced with your Docker Domain.
+  # Or set to to 'false' if you want to pre-pend your Docker Domain to the
+  # original Registry URL.
+  #
+  # Example:
+  # Container Image:              'docker.io/library/nginx:latest'
+  # Enabled replaceRegistryUrl:   'jfrog.local/library/nginx:latest'
+  # Disabled replaceRegistryUrl:  'jfrog.local/docker.io/library/nginx:latest'
+  replaceRegistryUrl: true
 
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"
