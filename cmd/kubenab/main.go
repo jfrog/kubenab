@@ -20,8 +20,8 @@ import (
 )
 
 var (
-	httpPingRequestsTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name: "http_ping_requests_total",
+	httpRequestsTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "http_requests_total",
 		Help: "Count of all HTTP requests on '/ping'",
 	}, []string{"code", "method"})
 
