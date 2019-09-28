@@ -65,6 +65,9 @@ func main() {
 	promRegistry := prometheus.NewRegistry()
 	promRegistry.MustRegister(httpPingRequestsTotal)
 	promRegistry.MustRegister(httpRequestDuration)
+
+	http.Handle("/metrics", promhttp.HandlerFor(promRegistry, promhttp.HandlerOpts{}))
+	http.HandleFunc("/ping", promhttp.InstrumentHandlerCounter(httpPingRequestsTotal, http.HandlerFunc(healthCheck)))
 	http.HandleFunc("/mutate", mutateAdmissionReviewHandler)
 	http.HandleFunc("/validate", validateAdmissionReviewHandler)
 	s := http.Server{
