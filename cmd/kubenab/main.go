@@ -80,6 +80,12 @@ func main() {
 }
 
 func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
+	// log Request Duration
+	promTimer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
+		httpRequestDuration.WithLabelValues("mutate").Observe(v * 1000) // add Milliseconds
+	}))
+	defer promTimer.ObserveDuration()
+
 	log.Printf("Serving request: %s", r.URL.Path)
 	//set header
 	w.Header().Set("Content-Type", "application/json")
@@ -207,6 +213,12 @@ func handleContainer(container *v1.Container, dockerRegistryUrl string) bool {
 }
 
 func validateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
+	// log Request Duration
+	promTimer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
+		httpRequestDuration.WithLabelValues("validate").Observe(v * 1000) // add Milliseconds
+	}))
+	defer promTimer.ObserveDuration()
+
 	log.Printf("Serving request: %s", r.URL.Path)
 	//set header
 	w.Header().Set("Content-Type", "application/json")
