@@ -62,7 +62,9 @@ func main() {
 	flag.StringVar(&tlsKeyFile, "tls-key", "/etc/admission-controller/tls/tls.key", "TLS key file.")
 	flag.Parse()
 
-	http.HandleFunc("/ping", healthCheck)
+	promRegistry := prometheus.NewRegistry()
+	promRegistry.MustRegister(httpPingRequestsTotal)
+	promRegistry.MustRegister(httpRequestDuration)
 	http.HandleFunc("/mutate", mutateAdmissionReviewHandler)
 	http.HandleFunc("/validate", validateAdmissionReviewHandler)
 	s := http.Server{
