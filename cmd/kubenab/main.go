@@ -63,11 +63,11 @@ func main() {
 	flag.Parse()
 
 	promRegistry := prometheus.NewRegistry()
-	promRegistry.MustRegister(httpPingRequestsTotal)
+	promRegistry.MustRegister(httpRequestsTotal)
 	promRegistry.MustRegister(httpRequestDuration)
 
 	http.Handle("/metrics", promhttp.HandlerFor(promRegistry, promhttp.HandlerOpts{}))
-	http.HandleFunc("/ping", promhttp.InstrumentHandlerCounter(httpPingRequestsTotal, http.HandlerFunc(healthCheck)))
+	http.HandleFunc("/ping", healthCheck)
 	http.HandleFunc("/mutate", mutateAdmissionReviewHandler)
 	http.HandleFunc("/validate", validateAdmissionReviewHandler)
 	s := http.Server{
@@ -80,6 +80,8 @@ func main() {
 }
 
 func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
+	httpRequestsTotal.With(prometheus.Labels{"api_endpoint": "metrics"}).Inc()
+
 	// log Request Duration
 	promTimer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 		httpRequestDuration.WithLabelValues("mutate").Observe(v * 1000) // add Milliseconds
@@ -213,6 +215,8 @@ func handleContainer(container *v1.Container, dockerRegistryUrl string) bool {
 }
 
 func validateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
+	httpRequestsTotal.With(prometheus.Labels{"api_endpoint": "validate"}).Inc()
+
 	// log Request Duration
 	promTimer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 		httpRequestDuration.WithLabelValues("validate").Observe(v * 1000) // add Milliseconds
@@ -334,6 +338,8 @@ func containsRegisty(arr []string, str string) bool {
 
 // ping responds to the request with a plain-text "Ok" message.
 func healthCheck(w http.ResponseWriter, r *http.Request) {
+	httpRequestsTotal.With(prometheus.Labels{"api_endpoint": "ping"}).Inc()
+
 	log.Printf("Serving request: %s", r.URL.Path)
 	fmt.Fprintf(w, "Ok")
 }
