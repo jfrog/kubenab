@@ -62,6 +62,20 @@ hpa:
     ## ===> build-in Metrics <===
     cpuUtilization:
       enabled: false
+      averageUtilization: 80
+
+    ## ==> Prometheus Metrics <==
+    ## !!The Metrics below requiring that you have deployed Prometheus(-Operator),
+    ##   prometheus-adapter and enabled `metrics`!!
+    ## !!AND please also !!READ!! the Section 'Automatic Scaling' in the README.md!!
+
+    ## This Metric contains the 'request/s' and the `targetAvg` is the avg across
+    ## all deployed Pods, and if the Values is higher then `targetAvg`, Kubernetes
+    ## will increase the Number of Replicas.
+    httpRequests:
+      enabled: false
+      targetAvg: 300
+
 
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"
