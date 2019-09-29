@@ -31,6 +31,16 @@ docker:
   # Disabled replaceRegistryUrl:  'jfrog.local/docker.io/library/nginx:latest'
   replaceRegistryUrl: true
 
+## Enabling this will add annotations and a Service-Discovery, so Prometheus
+## – especially the Prometheus-Operator – detect this Service and collects
+## metrics
+metrics:
+  enable: true
+  scrapeInterval: 10s
+
+  ## you need to enable this if you are using self-signed TLS Certificates
+  tlsSkipInsecure: false
+
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"
 # Whitelist docker registries within non-whitelisted namespaces e.g "rimusz,10.110.50.0:5000,docker.artifactory.com"
