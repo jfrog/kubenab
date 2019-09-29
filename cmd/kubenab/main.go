@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+        "strconv"
 
 	"k8s.io/api/admission/v1beta1"
 	"k8s.io/api/core/v1"
@@ -23,6 +24,7 @@ var (
 
 var (
 	dockerRegistryUrl     = os.Getenv("DOCKER_REGISTRY_URL")
+        replaceRegistryUrl    = os.Getenv("REPLACE_REGISTRY_URL")
 	registrySecretName    = os.Getenv("REGISTRY_SECRET_NAME")
 	whitelistRegistries   = os.Getenv("WHITELIST_REGISTRIES")
 	whitelistNamespaces   = os.Getenv("WHITELIST_NAMESPACES")
@@ -37,6 +39,9 @@ type patch struct {
 }
 
 func main() {
+        // check if all required Flags are set and in a correct Format
+        checkArguments()
+
 	flag.StringVar(&tlsCertFile, "tls-cert", "/etc/admission-controller/tls/tls.crt", "TLS certificate file.")
 	flag.StringVar(&tlsKeyFile, "tls-key", "/etc/admission-controller/tls/tls.key", "TLS key file.")
 	flag.Parse()
@@ -117,7 +122,7 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 	admissionResponse.Allowed = true
 	if len(patches) > 0 {
 
-		// Add image pull secret patche
+		// Add image pull secret patch
 		patches = append(patches, patch{
 			Op:   "add",
 			Path: "/spec/imagePullSecrets",
@@ -164,7 +169,10 @@ func handleContainer(container *v1.Container, dockerRegistryUrl string) bool {
 
 		imageParts := strings.Split(container.Image, "/")
 		newImage := ""
-		if len(imageParts) < 3 {
+
+                // pre-pend new Docker Registry Domain
+                repRegUrl, _ := strconv.ParseBool(replaceRegistryUrl) // we do not need to check for errors here, since we have done this already in checkArguments()
+                if (len(imageParts) < 3) || repRegUrl {
 			newImage = dockerRegistryUrl + "/" + container.Image
 		} else {
 			imageParts[0] = dockerRegistryUrl
@@ -298,4 +306,20 @@ func containsRegisty(arr []string, str string) bool {
 func healthCheck(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	fmt.Fprintf(w, "Ok")
+}
+
+// check if all (required) Arguments are set and valid
+func checkArguments() {
+        if len(dockerRegistryUrl) == 0 {
+                log.Fatalln("Environment Variable 'DOCKER_REGISTRY_URL' not set")
+        }
+
+        if len(replaceRegistryUrl) == 0 {
+                log.Fatalln("Environment Variable 'REPLACE_REGISTRY_URL' not set")
+        }
+
+        _, err := strconv.ParseBool(replaceRegistryUrl)
+        if err != nil {
+                log.Fatalln("Invalid Value in Environment Variable 'REPLACE_REGISTRY_URL'")
+        }
 }

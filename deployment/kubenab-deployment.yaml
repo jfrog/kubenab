@@ -24,6 +24,8 @@ spec:
             value: "kube-system,default"
           - name: WHITELIST_REGISTRIES
             value: "kubenab"
+          - name: REPLACE_REGISTRY_URL
+            value: "true"
         ports:
           - containerPort: 443
             name: https
