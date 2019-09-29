@@ -76,6 +76,11 @@ hpa:
       enabled: false
       targetAvg: 300
 
+    ## Latency describes the avg response Duration across all deployed Pods (99%).
+    ## Don't set it below 76ms.
+    latency:
+      enabled: false
+      targetAvg: # TODO: set default Value
 
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"
