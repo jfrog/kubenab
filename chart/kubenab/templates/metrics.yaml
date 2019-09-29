@@ -58,4 +58,4 @@ spec:
     name: http
   selector:
     prometheus: prometheus
-{{ endif }}
+{{ end }}
