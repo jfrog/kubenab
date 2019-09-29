@@ -31,6 +31,19 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Common labels
+*/}}
+{{- define "kubenab.labels" -}}
+app.kubernetes.io/name: {{ include "kubenab.name" . }}
+helm.sh/chart: {{ include "kubenab.chart" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
 {{- define "kubenab.selfSignedIssuer" -}}
 {{ printf "%s-selfsign" (include "kubenab.fullname" .) }}
 {{- end -}}
