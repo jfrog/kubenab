@@ -4,10 +4,7 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: {{ include "kubenab.fullname" . }}-mutate
   labels:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    helm.sh/chart: {{ include "kubenab.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "kubenab.labels" . | indent 4 }}
   annotations:
     certmanager.k8s.io/inject-ca-from: "{{ .Release.Namespace }}/{{ include "kubenab.servingCertificate" . }}"
 webhooks:

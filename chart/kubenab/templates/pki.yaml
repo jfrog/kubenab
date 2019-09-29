@@ -9,15 +9,10 @@ metadata:
   name: {{ include "kubenab.selfSignedIssuer" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    helm.sh/chart: {{ include "kubenab.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "kubenab.labels" . | indent 4 }}
 spec:
   selfSigned: {}
-
 ---
-
 # Generate a CA Certificate used to sign certificates for the kubenab
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
@@ -25,10 +20,7 @@ metadata:
   name: {{ include "kubenab.rootCACertificate" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    helm.sh/chart: {{ include "kubenab.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "kubenab.labels" . | indent 4 }}
 spec:
   secretName: {{ include "kubenab.rootCACertificate" . }}
   duration: 43800h # 5y
@@ -36,9 +28,7 @@ spec:
     name: {{ include "kubenab.selfSignedIssuer" . }}
   commonName: "ca.kubenab.kubenab"
   isCA: true
-
 ---
-
 # Create an Issuer that uses the above generated CA certificate to issue certs
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Issuer
@@ -46,16 +36,11 @@ metadata:
   name: {{ include "kubenab.rootCAIssuer" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    helm.sh/chart: {{ include "kubenab.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "kubenab.labels" . | indent 4 }}
 spec:
   ca:
     secretName: {{ include "kubenab.rootCACertificate" . }}
-
 ---
-
 # Finally, generate a serving certificate for the kubenab to use
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
@@ -63,10 +48,7 @@ metadata:
   name: {{ include "kubenab.servingCertificate" . }}
   namespace: {{ .Release.Namespace | quote }}
   labels:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    helm.sh/chart: {{ include "kubenab.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "kubenab.labels" . | indent 4 }}
 spec:
   secretName: {{ include "kubenab.servingCertificate" . }}
   duration: 8760h # 1y

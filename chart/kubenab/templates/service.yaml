@@ -3,10 +3,7 @@ kind: Service
 metadata:
   name: {{ include "kubenab.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    helm.sh/chart: {{ include "kubenab.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "kubenab.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,5 +12,4 @@ spec:
       protocol: TCP
       name: https
   selector:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "kubenab.labels" . | indent 4 }}
