@@ -1,0 +1,61 @@
+{{ if .Values.metrics.enable }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "kubenab.fullname" . }}-monitor
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  jobLabel: {{ include "kubenab.fullname" . }}-metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "kubenab.name" . }}
+      helm.sh/chart: {{ include "kubenab.chart" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+  endpoints:
+  - path: '/metrics'
+    port: https
+    interval: {{ .Values.metrics.scrapeInterval }}
+    scheme: https
+    tlsConfig:
+      tlsSkipInsecure: {{ .Values.metrics.tlsSkipInsecure }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus-{{ include "kubenab.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  version: v1.3.0
+  serviceMonitors:
+  - selector:
+      matchLabels:
+        app.kubernetes.io/name: {{ include "kubenab.name" . }}
+        helm.sh/chart: {{ include "kubenab.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-{{ include "kubenab.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "kubenab.name" . }}
+    helm.sh/chart: {{ include "kubenab.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  ports:
+  - port: 9090
+    name: http
+  selector:
+    prometheus: prometheus
+{{ endif }}
