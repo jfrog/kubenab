@@ -41,6 +41,17 @@ metrics:
   ## you need to enable this if you are using self-signed TLS Certificates
   tlsSkipInsecure: false
 
+## HPA (or HorizontalPodAutoScaling) is an Kubernetes Feature react dynamically
+## to special situations.
+## Kubernetes will scale 'kubenab' up if the current Number of Instances can't
+## handle all the traffic and it will also scale down if there isn't a usage
+## for the (new) Instances.
+hpa:
+  enabled: false
+
+  minReplicas: 1
+  maxReplicas: 10
+
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"
 # Whitelist docker registries within non-whitelisted namespaces e.g "rimusz,10.110.50.0:5000,docker.artifactory.com"
