@@ -20,7 +20,6 @@ func main() {
 	checkArguments()
 
 	flag.StringVar(&tlsCertFile, "tls-cert", "/etc/admission-controller/tls/tls.crt", "TLS certificate file.")
-	flag.StringVar(&tlsCertFile, "tls-cert", "/etc/admission-controller/tls/tls.crt", "TLS certificate file.")
 	flag.StringVar(&tlsKeyFile, "tls-key", "/etc/admission-controller/tls/tls.key", "TLS key file.")
 	flag.Parse()
 
@@ -38,5 +37,6 @@ func main() {
 			ClientAuth: tls.NoClientCert,
 		},
 	}
+
 	log.Fatal(s.ListenAndServeTLS(tlsCertFile, tlsKeyFile))
 }
