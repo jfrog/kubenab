@@ -42,7 +42,7 @@ If you don't do this the HPA will not work!
 {{- end }}
 
 {{/* ~~~~~ Response Latency Metric ~~~~~ */}}
-{{- if .Values.hap.metrics.latency }}
+{{- if .Values.hpa.metrics.latency }}
     - seriesQuery: 'rate(http_requests_total{job="http_request",quantile="0.99",kubernetes_namespace!="",kubernetes_pod_name!=""}[2m])'
       resources:
         overrides:
