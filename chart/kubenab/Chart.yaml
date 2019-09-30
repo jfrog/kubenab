@@ -3,10 +3,7 @@ name: kubenab
 version: 0.0.7
 appVersion: 0.3.2
 home: https://github.com/jfrog/kubenab
-# Since there where breaking API Changes in the K8s v1.16 to the `apiVersion`
-# we need to define a min Kubernetes Version to prevent conflicts when deploying
-# https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.16.md#deprecations-and-removals
-kubeVersion: ">=1.16.0"
+kubeVersion: ">=1.12.0"
 description: Kubenab Helm chart
 keywords:
 - devops
