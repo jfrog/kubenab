@@ -7,7 +7,11 @@ metadata:
 {{ include "kubenab.labels" . | indent 4 }}
 spec:
   scaleTargetRef:
+    {{- if .Capabilities.APIVersions.Has "apps/v1" }}
     apiVersion: apps/v1
+    {{- else }}
+    apiVersion: extensions/v1beta1
+    {{- end }}
     kind: Deployment
     name: {{ include "kubenab.fullname" . }}
   minReplicas: {{ .Values.hpa.minReplicas }}
