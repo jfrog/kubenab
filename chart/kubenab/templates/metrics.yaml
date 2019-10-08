@@ -10,13 +10,13 @@ spec:
   selector:
     matchLabels:
 {{ include "kubenab.labels" . | indent 6 }}
-endpoints:
+  endpoints:
   - path: '/metrics'
     port: https
     interval: {{ .Values.metrics.scrapeInterval }}
     scheme: https
     tlsConfig:
-      tlsSkipInsecure: {{ .Values.metrics.tlsSkipInsecure }}
+      insecureSkipVerify: {{ .Values.metrics.tlsSkipInsecure }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
