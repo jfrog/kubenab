@@ -20,8 +20,8 @@ import (
 var (
 	httpRequestsTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "http_requests_total",
-		Help: "Count of all HTTP requests on '/ping'",
-	}, []string{"code", "method", "api_endpoint"})
+		Help: "Count of all HTTP requests",
+	}, []string{"api_endpoint"})
 
 	httpRequestDuration = prometheus.NewSummaryVec(prometheus.SummaryOpts{
 		Name: "http_request_duration_milliseconds",
