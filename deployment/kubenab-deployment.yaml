@@ -11,6 +11,7 @@ spec:
       labels:
         app: kubenab
     spec:
+      priorityClassName: system-cluster-critical
       containers:
       - name: kubenab
         image: docker.bintray.io/kubexray:0.3.1
