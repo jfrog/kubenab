@@ -25,7 +25,7 @@ metadata:
   labels:
 {{ include "kubenab.labels" . | indent 4 }}
 spec:
-  version: v1.3.0
+  version: v2.5.0
   serviceMonitors:
   - selector:
       matchLabels:
