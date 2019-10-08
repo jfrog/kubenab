@@ -30,11 +30,11 @@ If you don't do this the HPA will not work!
 
 {{/* ~~~~~ HTTP Requests Metric ~~~~~ */}}
 {{- if .Values.hpa.metrics.httpRequests }}
-    - seriesQuery: 'http_requests_total{kubernetes_namespace!="",kubernetes_pod_name!=""}'
+    - seriesQuery: 'http_requests_total{namespace!="",pod!=""}'
       resources:
         overrides:
-          kubernetes_namespace: {resource: "namespace"}
-          kubernetes_pod_name: {resource: "pod"}
+          namespace: {resource: "namespace"}
+          pod: {resource: "pod"}
       name:
         matches: "^(.*)_total"
         as: "${1}_per_second"
