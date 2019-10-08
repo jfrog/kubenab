@@ -29,7 +29,7 @@ var (
 
                 // Latency Distribution
                 // 5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s
-		Objectives: []float64{5, 10, 25, 50, 100, 250, 500, 1000, 2500},
+		Buckets: []float64{5, 10, 25, 50, 100, 250, 500, 1000, 2500},
 	}, []string{"api_method"})
 )
 
