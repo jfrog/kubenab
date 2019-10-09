@@ -28,17 +28,17 @@ if Prometheus Metrics are enabled.
 Please add the following Data to the prometheus-adapter ConfigMap.
 If you don't do this the HPA will not work!
 
-{{/* ~~~~~ HTTP Requests Metric ~~~~~ */}}
-{{- if .Values.hpa.metrics.httpRequests }}
-    - seriesQuery: 'http_requests_total{namespace!="",pod!=""}'
+{{/* ~~~~~ Response Latency Metric ~~~~~ */}}
+{{- if .Values.hpa.metrics.latency }}
+    - seriesQuery: '{namespace!="",pod!=""}'
+      name:
+        matches: "^(.*)_milliseconds_bucket"
+        as: "http_request_duration"
       resources:
         overrides:
           namespace: {resource: "namespace"}
           pod: {resource: "pod"}
-      name:
-        matches: "^(.*)_total"
-        as: "${1}_per_second"
-      metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>}[2m])) by (<<.GroupBy>>)'
+      metricsQuery: 'histogram_quantile(0.99, sum(rate(<<.Series>>[5m])) by (le, api_method, endpoint, <<.GroupBy>>))'
 {{- end }}
 
 {{/* ~~~~~ Response Latency Metric ~~~~~ */}}
