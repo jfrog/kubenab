@@ -29,14 +29,20 @@ spec:
   {{- if .Values.hpa.metrics.httpRequests }}
   - type: Pods
     pods:
-      metricName: http_requests_per_second
-      targetAverageValue: {{ .Values.hpa.metrics.httpRequests.targetAverageValue }}
+      metric:
+        name: http_requests_per_second
+      target:
+        type: "AverageValue"
+        averageValue: "{{ .Values.hpa.metrics.httpRequests.targetAvg }}"
   {{- end }}
   {{- if .Values.hpa.metrics.latency }}
   - type: Pods
     pods:
-      metricName: http_request_duration
-      targetAverageValue: {{ .Values.hpa.metrics.latency.targetAvg }}
+      metric:
+        name: http_request_duration
+      target:
+        type: "AverageValue"
+        averageValue: "{{ .Values.hpa.metrics.latency.targetAvg }}"
   {{- end }}
   {{- end }}
 {{- end }}
