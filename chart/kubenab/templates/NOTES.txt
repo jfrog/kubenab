@@ -41,13 +41,15 @@ If you don't do this the HPA will not work!
       metricsQuery: 'histogram_quantile(0.99, sum(rate(<<.Series>>[5m])) by (le, api_method, endpoint, <<.GroupBy>>))'
 {{- end }}
 
-{{/* ~~~~~ Response Latency Metric ~~~~~ */}}
-{{- if .Values.hpa.metrics.latency }}
-    - seriesQuery: 'rate(http_requests_total{job="http_request",quantile="0.99",kubernetes_namespace!="",kubernetes_pod_name!=""}[2m])'
+{{/* ~~~~~ HTTP Requests Metric ~~~~~ */}}
+{{- if .Values.hpa.metrics.httpRequests }}
+    - seriesQuery: 'http_requests_total{namespace!="",pod!=""}'
       resources:
         overrides:
-          kubernetes_namespace: {resource: "namespace"}
-          kubernetes_pod_name: {resource: "pod"}
+          namespace: {resource: "namespace"}
+          pod: {resource: "pod"}
+      name:
+        matches: "^(.*)_total"
+        as: "${1}_per_second"
       metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>}[2m])) by (<<.GroupBy>>)'
-{{- end }}
 {{- end }}
