@@ -53,3 +53,4 @@ If you don't do this the HPA will not work!
         as: "${1}_per_second"
       metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>}[2m])) by (<<.GroupBy>>)'
 {{- end }}
+{{- end }}

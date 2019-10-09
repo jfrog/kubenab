@@ -80,7 +80,7 @@ hpa:
     ## Don't set it below 76ms.
     latency:
       enabled: false
-      targetAvg: # TODO: set default Value
+      targetAvg: 5000m # 5000m is equal to 5ms
 
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"
