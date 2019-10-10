@@ -50,7 +50,7 @@ type patch struct {
 }
 
 func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
-	httpRequestsTotal.With(prometheus.Labels{"api_endpoint": "metrics"}).Inc()
+	httpRequestsTotal.With(prometheus.Labels{"api_endpoint": "mutate"}).Inc()
 
 	// log Request Duration
 	promTimer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
