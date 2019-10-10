@@ -7,3 +7,4 @@ artifactory.creds*
 SUBSTITUTIONS
 .idea
 .vscode
+*.swp

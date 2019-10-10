@@ -1,15 +1,18 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kubenab-deployment
   labels:
     app: kubenab
 spec:
+  selector:
+    matchLabels:
+      app: "kubenab"
   replicas: 1
   template:
     metadata:
       labels:
-        app: kubenab
+        app: "kubenab"
     spec:
       priorityClassName: system-cluster-critical
       containers:

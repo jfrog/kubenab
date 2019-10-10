@@ -31,6 +31,57 @@ docker:
   # Disabled replaceRegistryUrl:  'jfrog.local/docker.io/library/nginx:latest'
   replaceRegistryUrl: true
 
+## Enabling this will add annotations and a Service-Discovery, so Prometheus
+## – especially the Prometheus-Operator – detect this Service and collects
+## metrics
+metrics:
+  enable: true
+  scrapeInterval: 10s
+
+  ## you need to enable this if you are using self-signed TLS Certificates
+  tlsSkipInsecure: false
+
+## HPA (or HorizontalPodAutoScaling) is an Kubernetes Feature react dynamically
+## to special situations.
+## Kubernetes will scale 'kubenab' up if the current Number of Instances can't
+## handle all the traffic and it will also scale down if there isn't a usage
+## for the (new) Instances.
+hpa:
+  enabled: false
+
+  minReplicas: 1
+  maxReplicas: 10
+
+  ## To decide if the number of Replicas must be increased or decreased,
+  ## Kubernetes needs Metrics.
+  ## Kubernetes has some build-in Metrics (CPU-Utilization, Memory-Usage, ...)
+  ## but to use advanced Metrics (like Number of Requests, Response Latency, ...)
+  ## you need Prometheus and the Prometheus-Adapter (https://github.com/DirectXMan12/k8s-prometheus-adapter/)
+  ## because Prometheus does not "export" those Metrics to Kubernetes.
+  metrics:
+    ## ===> build-in Metrics <===
+    cpuUtilization:
+      enabled: false
+      averageUtilization: 80
+
+    ## ==> Prometheus Metrics <==
+    ## !!The Metrics below requiring that you have deployed Prometheus(-Operator),
+    ##   prometheus-adapter and enabled `metrics`!!
+    ## !!AND please also !!READ!! the Section 'Automatic Scaling' in the README.md!!
+
+    ## This Metric contains the 'request/s' and the `targetAvg` is the avg across
+    ## all deployed Pods, and if the Values is higher then `targetAvg`, Kubernetes
+    ## will increase the Number of Replicas.
+    httpRequests:
+      enabled: false
+      targetAvg: 300
+
+    ## Latency describes the avg response Duration across all deployed Pods (99%).
+    ## Don't set it below 76ms.
+    latency:
+      enabled: false
+      targetAvg: 5000m # 5000m is equal to 5ms
+
 # Whitelist namespaces e.g "kubesystem,default,development"
 whitelistNamespaces: "kube-system,cert-manager"
 # Whitelist docker registries within non-whitelisted namespaces e.g "rimusz,10.110.50.0:5000,docker.artifactory.com"

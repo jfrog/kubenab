@@ -5,6 +5,9 @@ import (
 	"flag"
 	"log"
 	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
@@ -20,6 +23,11 @@ func main() {
 	flag.StringVar(&tlsKeyFile, "tls-key", "/etc/admission-controller/tls/tls.key", "TLS key file.")
 	flag.Parse()
 
+	promRegistry := prometheus.NewRegistry()
+	promRegistry.MustRegister(httpRequestsTotal)
+	promRegistry.MustRegister(httpRequestDuration)
+
+	http.Handle("/metrics", promhttp.HandlerFor(promRegistry, promhttp.HandlerOpts{}))
 	http.HandleFunc("/ping", healthCheck)
 	http.HandleFunc("/mutate", mutateAdmissionReviewHandler)
 	http.HandleFunc("/validate", validateAdmissionReviewHandler)
@@ -29,5 +37,6 @@ func main() {
 			ClientAuth: tls.NoClientCert,
 		},
 	}
+
 	log.Fatal(s.ListenAndServeTLS(tlsCertFile, tlsKeyFile))
 }

@@ -3,6 +3,7 @@ name: kubenab
 version: 0.0.7
 appVersion: 0.3.2
 home: https://github.com/jfrog/kubenab
+kubeVersion: ">=1.12.0"
 description: Kubenab Helm chart
 keywords:
 - devops

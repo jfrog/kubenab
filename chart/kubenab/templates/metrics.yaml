@@ -1,0 +1,46 @@
+{{ if .Values.metrics.enable }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "kubenab.fullname" . }}-monitor
+  labels:
+{{ include "kubenab.labels" . | indent 4 }}
+spec:
+  jobLabel: {{ include "kubenab.fullname" . }}-metrics
+  selector:
+    matchLabels:
+{{ include "kubenab.labels" . | indent 6 }}
+  endpoints:
+  - path: '/metrics'
+    port: https
+    interval: {{ .Values.metrics.scrapeInterval }}
+    scheme: https
+    tlsConfig:
+      insecureSkipVerify: {{ .Values.metrics.tlsSkipInsecure }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus-{{ include "kubenab.fullname" . }}
+  labels:
+{{ include "kubenab.labels" . | indent 4 }}
+spec:
+  version: v2.5.0
+  serviceMonitors:
+  - selector:
+      matchLabels:
+{{ include "kubenab.labels" . | indent 8 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-{{ include "kubenab.fullname" . }}
+  labels:
+{{ include "kubenab.labels" . | indent 4 }}
+spec:
+  ports:
+  - port: 9090
+    name: http
+  selector:
+    prometheus: prometheus
+{{ end }}

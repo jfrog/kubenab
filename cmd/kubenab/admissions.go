@@ -13,6 +13,24 @@ import (
 	"k8s.io/api/admission/v1beta1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/prometheus/client_golang/prometheus"
+)
+
+var (
+	httpRequestsTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Name: "http_requests_total",
+		Help: "Count of all HTTP requests",
+	}, []string{"api_endpoint"})
+
+	httpRequestDuration = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Name: "http_request_duration_milliseconds",
+		Help: "The HTTP request Duration in Milliseconds",
+
+                // Latency Distribution
+                // 5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s
+		Buckets: []float64{5, 10, 25, 50, 100, 250, 500, 1000, 2500},
+	}, []string{"api_method"})
 )
 
 var (
@@ -32,6 +50,14 @@ type patch struct {
 }
 
 func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
+	httpRequestsTotal.With(prometheus.Labels{"api_endpoint": "mutate"}).Inc()
+
+	// log Request Duration
+	promTimer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
+		httpRequestDuration.WithLabelValues("mutate").Observe(v * 1000) // add Milliseconds
+	}))
+	defer promTimer.ObserveDuration()
+
 	log.Printf("Serving request: %s", r.URL.Path)
 	//set header
 	w.Header().Set("Content-Type", "application/json")
@@ -95,7 +121,7 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 	admissionResponse.Allowed = true
 	if len(patches) > 0 {
 
-		// Add image pull secret patch
+		// Add image pull secret patche
 		patches = append(patches, patch{
 			Op:   "add",
 			Path: "/spec/imagePullSecrets",
@@ -162,6 +188,14 @@ func handleContainer(container *v1.Container, dockerRegistryUrl string) bool {
 }
 
 func validateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
+	httpRequestsTotal.With(prometheus.Labels{"api_endpoint": "validate"}).Inc()
+
+	// log Request Duration
+	promTimer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
+		httpRequestDuration.WithLabelValues("validate").Observe(v * 1000) // add Milliseconds
+	}))
+	defer promTimer.ObserveDuration()
+
 	log.Printf("Serving request: %s", r.URL.Path)
 	//set header
 	w.Header().Set("Content-Type", "application/json")

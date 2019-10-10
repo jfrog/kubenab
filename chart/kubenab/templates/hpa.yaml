@@ -1,0 +1,48 @@
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "kubenab.fullname" . }}
+  labels:
+{{ include "kubenab.labels" . | indent 4 }}
+spec:
+  scaleTargetRef:
+    {{- if .Capabilities.APIVersions.Has "apps/v1" }}
+    apiVersion: apps/v1
+    {{- else }}
+    apiVersion: extensions/v1beta1
+    {{- end }}
+    kind: Deployment
+    name: {{ include "kubenab.fullname" . }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  metrics:
+  {{- if .Values.hpa.metrics.cpuUtilization.enabled }}
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.hpa.metrics.cpuUtilization.averageUtilization }}
+  {{- end }}
+  {{- if .Values.metrics.enable }}
+  {{- if .Values.hpa.metrics.httpRequests }}
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: "AverageValue"
+        averageValue: "{{ .Values.hpa.metrics.httpRequests.targetAvg }}"
+  {{- end }}
+  {{- if .Values.hpa.metrics.latency }}
+  - type: Pods
+    pods:
+      metric:
+        name: http_request_duration
+      target:
+        type: "AverageValue"
+        averageValue: "{{ .Values.hpa.metrics.latency.targetAvg }}"
+  {{- end }}
+  {{- end }}
+{{- end }}

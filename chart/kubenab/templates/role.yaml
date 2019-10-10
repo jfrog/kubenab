@@ -4,10 +4,7 @@ kind: Role
 metadata:
   name: {{ include "kubenab.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "kubenab.name" . }}
-    helm.sh/chart: {{ include "kubenab.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "kubenab.labels" . | indent 4 }}
 rules:
 {{ toYaml .Values.rbac.role.rules }}
 {{- end }}
