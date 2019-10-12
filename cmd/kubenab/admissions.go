@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jfrog/kubenab/log"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -69,7 +69,7 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(string(data))
+	log.Debugln(data)
 
 	ar := v1beta1.AdmissionReview{}
 	if err := json.Unmarshal(data, &ar); err != nil {
@@ -207,7 +207,7 @@ func validateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(string(data))
+	log.Debug(data)
 
 	ar := v1beta1.AdmissionReview{}
 	if err := json.Unmarshal(data, &ar); err != nil {
