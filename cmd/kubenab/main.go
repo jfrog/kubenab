@@ -16,6 +16,9 @@ var (
 )
 
 func main() {
+	// print Version Informations
+	log.Printf("Starting kubenab version %s - %s - %s", AppVersion, BuildDate, GitHash)
+
 	// check if all required Flags are set and in a correct Format
 	checkArguments()
 
