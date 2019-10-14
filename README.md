@@ -75,7 +75,7 @@ helm install --name kubenab --set docker.registrySecret=regsecret,docker.registr
 
 ```bash
 # Configure MutatingAdmissionWebhook
-kubectl create -f webhook/kubenab-mutating-webhook-configuration.yaml 
+kubectl create -f webhook/kubenab-mutating-webhook-configuration.yaml
 ```
 
 Note: Use MutatingAdmissionWebhook only if you want to enforce pulling of docker image from Private Docker Registry e.g [JFrog Artifactory](https://jfrog.com/artifactory/).
@@ -83,7 +83,7 @@ If your container image is `nginx` then Kubenab will append `REGISTRY_URL` to it
 
 ```bash
 # Configure ValidatingAdmissionWebhook
-kubectl create -f webhook/kubenab-validating-webhook-configuration.yaml 
+kubectl create -f webhook/kubenab-validating-webhook-configuration.yaml
 ```
 
 Note: Use ValidatingAdmissionWebhook only if you want to check pulling of docker image from Private Docker Registry e.g [JFrog Artifactory](https://jfrog.com/artifactory/).
@@ -103,8 +103,8 @@ helm install --name kubenab --set docker.registrySecret=regsecret,docker.registr
 ### Test Kubenab
 
 ```bash
-# Deploy nginx 
-kubectl apply -f test/nginx.yaml 
+# Deploy nginx
+kubectl apply -f test/nginx.yaml
 ```
 
 
@@ -119,44 +119,42 @@ Run the `benchmark.sh` Script in [`benchmark/`](./benchmark/), you only need
 ==> Mutate Webhook
 
 
-Bombarding https://localhost:8443/mutate with 10000000 request(s) using 125 connection(s)
-0.93% 3763/s 43m52s 10000000 / 10000000 [===================================================================================================================] 100.00% 402758/s 24s
+ 1000000 / 1000000 [=====================================================================================================================] 100.00% 6850/s 2m25s
 Done!
 Statistics        Avg      Stdev        Max
-  Reqs/sec      3768.79    1572.22    9018.40
-  Latency       33.17ms    40.63ms      1.41s
+  Reqs/sec      6906,14     612,30    7957,42
+  Latency      285,93us   171,41us    27,91ms
   Latency Distribution
-     50%    36.47ms
-     75%    42.12ms
-     90%    50.91ms
-     95%    57.66ms
-     99%    74.57ms
+     50%   257,00us
+     75%   309,00us
+     90%   376,00us
+     95%   440,00us
+     99%   764,00us
   HTTP codes:
-    1xx - 0, 2xx - 92918, 3xx - 0, 4xx - 0, 5xx - 0
+    1xx - 0, 2xx - 100000, 3xx - 0, 4xx - 0, 5xx - 0
     others - 0
-  Throughput:     8.23MB/s
+  Throughput:    15.05MB/s
 
 
 ==> Validate Webhook
 
 
-Bombarding https://localhost:8443/validate with 10000000 request(s) using 125 connection(s)
-1.09% 3534/s 46m38s 10000000 / 10000000 [===================================================================================================================] 100.00% 322221/s 31s
+ 1000000 / 1000000 [=====================================================================================================================] 100.00% 6669/s 2m29s
 Done!
 Statistics        Avg      Stdev        Max
-  Reqs/sec      3539.79    1469.33    8555.02
-  Latency       35.27ms    36.69ms      1.31s
+  Reqs/sec      6675.83     515.18    8017.83
+  Latency      295.81us    99.07us    22.86ms
   Latency Distribution
-     50%    39.09ms
-     75%    45.12ms
-     90%    53.84ms
-     95%    60.45ms
-     99%    76.82ms
+     50%   267.00us
+     75%   319.00us
+     90%   388.00us
+     95%   453.00us
+     99%   759.00us
   HTTP codes:
-    1xx - 0, 2xx - 109860, 3xx - 0, 4xx - 0, 5xx - 0
+    1xx - 0, 2xx - 1000000, 3xx - 0, 4xx - 0, 5xx - 0
     others - 0
-  Throughput:     8.61MB/s
+  Throughput:    16.20MB/s
 ```
 
-**ATTENTION:** This Benchmark was done on an _not_ optimized Laptop!
+**ATTENTION:** This Benchmark was done on an _non_ optimized Laptop!
 (Intel(R) Core(TM) i5-3230M CPU @ 2.60GHz **;** 8GB RAM)
