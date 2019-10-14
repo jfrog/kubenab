@@ -1,3 +1,6 @@
+# 'strip_debug' will increase the Performance of kubenab
+# You can disable this by setting `STRIP_DEBUG=""`
+STRIP_DEBUG ?= "-tags 'strip_debug'"
 
 .PHONY: image
 image:
@@ -12,4 +15,4 @@ build: export GOPROXY=https://gocenter.io
 build:
 	@echo "++ Building kubenab go binary..."
 	mkdir -p bin
-	cd cmd/kubenab && go build -a --installsuffix cgo --ldflags="-s" -o ../../bin/kubenab
+	cd cmd/kubenab && go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="-s" -o ../../bin/kubenab
