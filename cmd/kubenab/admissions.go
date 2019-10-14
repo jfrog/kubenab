@@ -27,8 +27,8 @@ var (
 		Name: "http_request_duration_milliseconds",
 		Help: "The HTTP request Duration in Milliseconds",
 
-                // Latency Distribution
-                // 5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s
+		// Latency Distribution
+		// 5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s
 		Buckets: []float64{5, 10, 25, 50, 100, 250, 500, 1000, 2500},
 	}, []string{"api_method"})
 )
@@ -120,17 +120,18 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 
 	admissionResponse.Allowed = true
 	if len(patches) > 0 {
-
-		// Add image pull secret patche
-		patches = append(patches, patch{
-			Op:   "add",
-			Path: "/spec/imagePullSecrets",
-			Value: []v1.LocalObjectReference{
-				v1.LocalObjectReference{
-					Name: registrySecretName,
+		// add image pull secret patch if User has added it
+		if len(registrySecretName) > 0 {
+			patches = append(patches, patch{
+				Op:   "add",
+				Path: "/spec/imagePullSecrets",
+				Value: []v1.LocalObjectReference{
+					v1.LocalObjectReference{
+						Name: registrySecretName,
+					},
 				},
-			},
-		})
+			})
+		}
 
 		patchContent, err := json.Marshal(patches)
 		if err != nil {
