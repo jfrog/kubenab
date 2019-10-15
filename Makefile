@@ -1,3 +1,6 @@
+GIT_HASH=$(shell git rev-parse HEAD)
+BUILD_DATE=$(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
+APP_VERSION=$(shell git describe --abbrev=0 --tags)
 
 .PHONY: image
 image:
@@ -12,4 +15,4 @@ build: export GOPROXY=https://gocenter.io
 build:
 	@echo "++ Building kubenab go binary..."
 	mkdir -p bin
-	cd cmd/kubenab && go build -a --installsuffix cgo --ldflags="-s" -o ../../bin/kubenab
+	cd cmd/kubenab && go build -a --installsuffix cgo --ldflags="-s -X main.AppVersion=$(APP_VERSION) -X main.BuildDate=$(BUILD_DATE) -X main.GitHash=$(GIT_HASH)" -o ../../bin/kubenab
