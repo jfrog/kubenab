@@ -91,26 +91,41 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		var patchPath strings.Builder
+
 		// Handle Containers
-		for _, container := range pod.Spec.Containers {
+		for i, container := range pod.Spec.Containers {
 			createPatch := handleContainer(&container, dockerRegistryUrl)
 			if createPatch {
+				patchPath.Reset()
+				// TODO: Check the returned Error
+				_, _ = patchPath.WriteString("/spec/containers/")
+				_, _ = patchPath.WriteString(strconv.Itoa(i))
+				_, _ = patchPath.WriteString("/image")
+
 				patches = append(patches, patch{
-					Op:    "add",
-					Path:  "/spec/containers",
-					Value: []v1.Container{container},
+					Op:    "replace",
+					Path:  patchPath.String(),
+					Value: container.Image,
 				})
 			}
 		}
 
 		// Handle init containers
-		for _, container := range pod.Spec.InitContainers {
+		for i, container := range pod.Spec.InitContainers {
 			createPatch := handleContainer(&container, dockerRegistryUrl)
 			if createPatch {
+				patchPath.Reset()
+
+				// TODO: Check the returned Error
+				_, _ = patchPath.WriteString("/spec/initContainers/")
+				_, _ = patchPath.WriteString(strconv.Itoa(i))
+				_, _ = patchPath.WriteString("/image")
+
 				patches = append(patches, patch{
-					Op:    "add",
-					Path:  "/spec/initContainers",
-					Value: []v1.Container{container},
+					Op:    "replace",
+					Path:  patchPath.String(),
+					Value: container.Image,
 				})
 			}
 		}
