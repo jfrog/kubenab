@@ -12,6 +12,8 @@ builds:
       - windows
     goarch:
       - amd64
+    flags:
+      - -tags 'strip_debug'
 archives:
   - format: tar.gz
     name_template: "kubenab_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
