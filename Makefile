@@ -22,4 +22,4 @@ build:
 	git fetch --tags
 	@echo "++ Building kubenab go binary..."
 	mkdir -p bin
-	cd cmd/kubenab && go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="-s -X main.AppVersion=$(APP_VERSION) -X main.BuildDate=$(BUILD_DATE) -X main.GitHash=$(GIT_HASH)" -o $(OUT_DIR)/kubenab
+	cd cmd/kubenab && go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="-s -X main.version=$(APP_VERSION) -X main.date=$(BUILD_DATE) -X main.commit=$(GIT_HASH)" -o $(OUT_DIR)/kubenab
