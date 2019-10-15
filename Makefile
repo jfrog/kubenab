@@ -2,7 +2,7 @@
 # You can disable this by setting `STRIP_DEBUG=""`
 STRIP_DEBUG ?=-tags 'strip_debug'
 # OUT_DIR sets the Path where the kubenab Build Artifact will be puttet
-OUT_DIR ?=../../bin
+OUT_DIR ?=../../../bin
 GIT_HASH=$(shell git rev-parse HEAD)
 BUILD_DATE=$(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
 APP_VERSION=$(shell git describe --abbrev=0 --tags)
@@ -22,4 +22,4 @@ build:
 	git fetch --tags
 	@echo "++ Building kubenab go binary..."
 	mkdir -p bin
-	cd cmd/kubenab && go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="-s -X main.AppVersion=$(APP_VERSION) -X main.BuildDate=$(BUILD_DATE) -X main.GitHash=$(GIT_HASH)" -o $(OUT_DIR)kubenab
+	cd cmd/kubenab && go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="-s -X main.AppVersion=$(APP_VERSION) -X main.BuildDate=$(BUILD_DATE) -X main.GitHash=$(GIT_HASH)" -o $(OUT_DIR)/kubenab
