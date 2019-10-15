@@ -1,15 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/jfrog/kubenab/log"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 
+	json "github.com/json-iterator/go"
 	"k8s.io/api/admission/v1beta1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -69,7 +69,7 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(string(data))
+	log.Debugln(data)
 
 	ar := v1beta1.AdmissionReview{}
 	if err := json.Unmarshal(data, &ar); err != nil {
@@ -135,17 +135,18 @@ func mutateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 
 	admissionResponse.Allowed = true
 	if len(patches) > 0 {
-
-		// Add image pull secret patche
-		patches = append(patches, patch{
-			Op:   "add",
-			Path: "/spec/imagePullSecrets",
-			Value: []v1.LocalObjectReference{
-				v1.LocalObjectReference{
-					Name: registrySecretName,
+		// add image pull secret patch if User has added it
+		if len(registrySecretName) > 0 {
+			patches = append(patches, patch{
+				Op:   "add",
+				Path: "/spec/imagePullSecrets",
+				Value: []v1.LocalObjectReference{
+					v1.LocalObjectReference{
+						Name: registrySecretName,
+					},
 				},
-			},
-		})
+			})
+		}
 
 		patchContent, err := json.Marshal(patches)
 		if err != nil {
@@ -222,7 +223,7 @@ func validateAdmissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(string(data))
+	log.Debug(data)
 
 	ar := v1beta1.AdmissionReview{}
 	if err := json.Unmarshal(data, &ar); err != nil {
