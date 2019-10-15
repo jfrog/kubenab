@@ -9,7 +9,7 @@ Kubenab is Kubernetes Admission webhook to enforce pulling of docker images from
 
 ### Prerequisites
 
-Kubernetes 1.9.0 or above with the `admissionregistration.k8s.io/v1beta1` API enabled. Verify that by the following command:
+Kubernetes 1.12.0 or above with the `admissionregistration.k8s.io/v1beta1` API enabled. Verify that by the following command:
 ```
 kubectl api-versions | grep admissionregistration.k8s.io/v1beta1
 ```
@@ -24,10 +24,10 @@ In addition, the `MutatingAdmissionWebhook` and `ValidatingAdmissionWebhook` adm
 
 ```bash
 # Build docker image
-docker build -t my-registry/kubenab:0.0.5 .
+docker build -t my-registry/kubenab:0.3.3 .
 
 # Push it to Docker Registry
-docker push my-registry/kubenab:0.0.5
+docker push my-registry/kubenab:0.3.3
 ```
 
 ### Create [Kubernetes Docker registry secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
