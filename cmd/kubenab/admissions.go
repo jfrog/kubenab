@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/jfrog/kubenab/log"
+	"github.com/jfrog/kubenab/cmd/kubenab/log"
 	"io/ioutil"
 	"net/http"
 	"os"
