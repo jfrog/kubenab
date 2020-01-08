@@ -6,6 +6,7 @@
 
 ### What does Kubenab do?
 Kubenab is Kubernetes Admission webhook to enforce pulling of docker images from private registry.
+It is based on [JFrog/Tugger](https://github.com/jfrog/tugger) which will eventually be deleted.
 
 ### Prerequisites
 
