@@ -112,6 +112,11 @@ resources:
     cpu: 50m
     memory: 64Mi
 
+# Defines priorityClass to run the deployment
+priorityClass:
+    enabled: true
+    name: system-cluster-critical
+
 ## Role Based Access Control
 rbac:
   create: true
