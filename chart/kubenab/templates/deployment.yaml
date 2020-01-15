@@ -19,7 +19,9 @@ spec:
       labels:
 {{ include "kubenab.labels" . | indent 8 }}
     spec:
-      priorityClassName: system-cluster-critical
+      {{- if .Values.priorityClass.enabled }}
+      priorityClassName: {{ .Values.priorityClass.name | default "system-cluster-critical" }}
+      {{- end }}
       serviceAccountName: {{ include "kubenab.fullname" . }}
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
