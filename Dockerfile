@@ -23,5 +23,8 @@ FROM gcr.io/distroless/static
 # Copy microservice executable from builder image
 COPY --from=builder /kubenab /bin/kubenab
 
+# Set runtime user to non-root
+USER 1000
+
 # Set Entrypoint
 CMD ["kubenab"]
