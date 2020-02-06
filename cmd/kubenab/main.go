@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -26,6 +27,12 @@ func main() {
 	flag.StringVar(&tlsKeyFile, "tls-key", "/etc/admission-controller/tls/tls.key", "TLS key file.")
 	flag.Parse()
 
+	os.LookupEnv("PORT")
+	port := "4443"
+	if envPort, exists := os.LookupEnv("PORT"); exists {
+		port = envPort
+	}
+
 	promRegistry := prometheus.NewRegistry()
 	promRegistry.MustRegister(httpRequestsTotal)
 	promRegistry.MustRegister(httpRequestDuration)
@@ -35,7 +42,7 @@ func main() {
 	http.HandleFunc("/mutate", mutateAdmissionReviewHandler)
 	http.HandleFunc("/validate", validateAdmissionReviewHandler)
 	s := http.Server{
-		Addr: ":443",
+		Addr: ":" + port,
 		TLSConfig: &tls.Config{
 			ClientAuth: tls.NoClientCert,
 		},

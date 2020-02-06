@@ -11,6 +11,7 @@ image:
   # Note that by default we use appVersion to get image tag
   # tag:
   pullPolicy: IfNotPresent
+  port: 4443
 
 service:
   type: ClusterIP

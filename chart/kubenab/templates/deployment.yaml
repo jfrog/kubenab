@@ -13,7 +13,8 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-{{ include "kubenab.labels" . | indent 6 }}
+      app.kubernetes.io/name: {{ include "kubenab.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
@@ -42,9 +43,11 @@ spec:
               value: {{ .Values.whitelistRegistries }}
             - name: REPLACE_REGISTRY_URL
               value: {{ .Values.docker.replaceRegistryUrl }}
+            - name: PORT
+              value: {{ .Values.image.port }}
           ports:
             - name: https
-              containerPort: 443
+              containerPort: {{ .Values.image.port }}
               protocol: TCP
           volumeMounts:
             - name: tls
