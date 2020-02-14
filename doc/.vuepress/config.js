@@ -9,9 +9,20 @@ const url = 'http://0.0.0.0:8080/'
 
 module.exports = {
   plugins: [
-    ['@vuepress/search', {
-      searchMaxSuggestions: 10
-    }]
+    [
+      '@vuepress/search', {
+        searchMaxSuggestions: 10
+      }
+    ],
+    [
+      '@vuepress/google-analytics',
+      {
+        ga: 'UA-105614803-5',
+      },
+    ],
+    '@vuepress/medium-zoom',
+    'vuepress-plugin-element-tabs',
+    'markdown-it-container'
   ],
   head: [
     ['link', { rel: 'icon', href: `/icon.png` }],
@@ -35,8 +46,7 @@ module.exports = {
       permalink: true,
     },
     config: md => {
-      md
-        .use(require('markdown-it-container'))
+      md.use(require('markdown-it-container'))
         .use(require('markdown-it-mathjax'))
         .use(require('markdown-it-attrs'))
         .use(require('markdown-it-checkbox'), {divWrap: true, divClass: 'cb', idPrefix: 'cbx_'})
@@ -46,17 +56,28 @@ module.exports = {
         .use(require('markdown-it-anchor'), {permalink: true, permalinkBefore: true, permalinkSymbol: '§'})
         .use(require('markdown-it-toc-done-right'), {"placeholder": "[[toc]]"})
         .use(require('markdown-it-decorate'))
-        .use(...createContainer('intro'))
-        .use(...createContainer('note'))
     }
   },
   title,
   description,
   base: '/',
   themeConfig: {
-    versions: [
-      ['dev-1.0.0', '/'],
+    nav: [
+      {
+        text: 'Versions',
+        items: [
+                {
+                        text: 'dev-1.0.0',
+                        link: '/dev-1.0.0/',
+                },
+                {
+                        text: 'Version 3.0.0-alpha.x',
+                        link: '/3.0.0-alpha.x/',
+                },
+        ],
+      },
     ],
+    repo: 'jfrog/statping',
     locales: {
         '/': {
                 lang: 'en-US',
@@ -72,21 +93,4 @@ module.exports = {
             // add links to documentation
     },
   },
-}
-
-
-/**
-  * Function copied from Strapi (https://github.com/strapi/strapi/blob/master/docs/.vuepress/config.js#L179)
-  */
-function createContainer(className) {
-  return [container, className, {
-    render(tokens, idx) {
-      const token = tokens[idx]
-      if (token.nesting === 1) {
-        return `<div class="${className} custom-block">\n`
-      } else {
-        return `</div>\n`
-      }
-    }
-  }]
 }
