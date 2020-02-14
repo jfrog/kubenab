@@ -937,6 +937,11 @@
   dependencies:
     lodash.debounce "^4.0.8"
 
+"@vuepress/plugin-google-analytics@^1.3.0":
+  version "1.3.0"
+  resolved "https://www.fabmation.info/artifact/api/npm/npm/@vuepress/plugin-google-analytics/-/plugin-google-analytics-1.3.0.tgz#1801f49f6cd8f49a2b9f8a330439f688155c0ea0"
+  integrity sha1-GAH0n2zY9Jorn4ozBDn2iBVcDqA=
+
 "@vuepress/plugin-i18n-ui@^1.0.0-alpha.0":
   version "1.0.0-alpha.0"
   resolved "https://www.fabmation.info/artifact/api/npm/npm/@vuepress/plugin-i18n-ui/-/plugin-i18n-ui-1.0.0-alpha.0.tgz#aff0d27196cd84280512dad8effdf2b324a8993d"
