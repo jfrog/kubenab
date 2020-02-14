@@ -4,8 +4,8 @@ const ogprefix = 'og: http://ogp.me/ns#'
 const title = 'kubenab'
 const description = 'Kubernetes Admission Webhook to enforce pulling of Docker images from the private registry.'
 const color = '#2F80ED'
-//const author = '§author§'
-//const url = 'https://docs.fab/§prjid§'
+const author = '§author§' // TODO: define me
+const url = 'http://0.0.0.0:8080/'
 
 module.exports = {
   plugins: [
@@ -55,9 +55,15 @@ module.exports = {
   base: '/',
   themeConfig: {
     versions: [
-      // VERSIONS
+      ['dev-1.0.0', '/'],
     ],
-    docsDir: 'doc',
+    locales: {
+        '/': {
+                lang: 'en-US',
+                title: 'kubenab - English'
+        }
+    },
+    docsDir: '.',
     serviceWorker: true,
     hiddenLinks: [
       // HIDDEN_LINKS

@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "docs:dev": "vuepress dev doc",
-    "docs:build": "vuepress build doc"
+    "docs:dev": "vuepress dev .",
+    "docs:build": "vuepress build ."
   },
   "devDependencies": {
     "@vuepress/plugin-i18n-ui": "^1.0.0-alpha.0",
