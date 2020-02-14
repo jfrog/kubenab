@@ -26,5 +26,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo "---
 meta:
   - http-equiv: refresh
-    content: 0;url=/doc/${1}
+    content: 0;url=/${1}
 ---" > "${DIR}/README.md"
