@@ -7,7 +7,9 @@ require (
 	github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4 // indirect
 	github.com/prometheus/common v0.7.0 // indirect
 	github.com/prometheus/procfs v0.0.5 // indirect
-	github.com/valyala/fasthttp v1.9.0
+	github.com/spf13/cobra v0.0.5+incompatible
+	github.com/spf13/viper v1.6.2
+	github.com/valyala/fasthttp v1.9.0 // indirect
 	golang.org/x/net v0.0.0-20190926025831-c00fd9afed17 // indirect
 	golang.org/x/sys v0.0.0-20190927073244-c990c680b611 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
