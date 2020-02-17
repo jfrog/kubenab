@@ -89,8 +89,33 @@ module.exports = {
     hiddenLinks: [
       // HIDDEN_LINKS
     ],
+    serviceWorker: true,
+    sidebarDepth: 1,
     sidebar: {
-            // add links to documentation
+            '/dev-1.0.0/': [
+                {
+                        collapsable: true,
+                        title: 'Administator Guide',
+                        children: [
+
+                                {
+                                    collapsable: true,
+                                    title: 'Configuration',
+                                    children: [
+                                        '/dev-1.0.0/Admin_Guide/Config/quick-start',
+                                        '/dev-1.0.0/Admin_Guide/Config/configuration',
+                                    ],
+                                }
+                        ],
+                },
+                {
+                        collapsable: true,
+                        title: 'Contributing',
+                        children: [
+                                // TODO: Add documentation for contributors
+                        ],
+                },
+            ],
     },
   },
 }
