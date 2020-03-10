@@ -2,16 +2,12 @@
 
 package log
 
-import "log"
+import _log "github.com/sirupsen/logrus"
 
-func Debug(v ...interface{}) {
-	log.Print(v...)
+func Debugf(fmt string, v ...interface{}) {
+	_log.Debugf(fmt, v...)
 }
 
 func Debugln(v ...interface{}) {
-	log.Println(v...)
-}
-
-func Debugf(fmt string, args ...interface{}) {
-	log.Printf(fmt, args...)
+	_log.Debugln(v...)
 }
