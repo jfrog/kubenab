@@ -7,7 +7,7 @@ DEBUG ?= false
 # OUT_DIR sets the Path where the kubenab Build Artifact will be puttet
 OUT_DIR ?=./bin
 COMMIT := $(shell git rev-parse HEAD)
-LD_FLAGS ?=-X main.Version=$(shell git-semver -prefix v) -X main.Commit=${COMMIT} -X main.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
+LD_FLAGS ?=-X internal.Version=$(shell git-semver -prefix v) -X internal.Commit=${COMMIT} -X internal.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
 C_FLAGS := ""
 
 # set default target to 'help'
