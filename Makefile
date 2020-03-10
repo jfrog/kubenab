@@ -7,7 +7,7 @@ DEBUG ?= false
 # OUT_DIR sets the Path where the kubenab Build Artifact will be puttet
 OUT_DIR=./bin
 COMMIT= $(shell git rev-parse HEAD)
-LD_FLAGS=-X internal.Version=$(shell git-semver -prefix v) -X internal.Commit=${COMMIT} -X internal.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
+LD_FLAGS=-X github.com/jfrog/kubenab/internal.Version=$(shell git-semver -prefix v) -X github.com/jfrog/kubenab/internal.Commit=${COMMIT} -X github.com/jfrog/kubenab/internal.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
 C_FLAGS=
 
 # set default target to 'help'
@@ -25,7 +25,7 @@ help:
 ifeq ($(DEBUG),true)
 # add 'debug' LD flag and enable debug features in binary
 C_FLAGS+= -tags 'debug'
-LD_FLAGS+= -X internal.DebugAvail=true
+LD_FLAGS+= -X github.com/jfrog/kubenab/internal.DebugAvail=true
 endif
 
 .PHONY: build
