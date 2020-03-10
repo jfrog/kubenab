@@ -5,12 +5,14 @@ import (
 	"os"
 
 	"github.com/jfrog/kubenab/cmd"
+	"github.com/jfrog/kubenab/internal"
 	_log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	// print Version Informations
-	log.Printf("Starting kubenab version %s - %s - %s", version, date, commit)
+	log.Printf("Starting kubenab version %s - %s - %s", internal.Version,
+		internal.BuildDate, internal.Commit)
 
 	// initialize logger
 	initLogger()
