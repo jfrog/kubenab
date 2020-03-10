@@ -1,11 +1,14 @@
-# 'strip_debug' will increase the Performance of kubenab
-# You can disable this by setting `STRIP_DEBUG=""` – which is not recommended.
-STRIP_DEBUG ?=-tags 'strip_debug'
+# DEBUG enables or disables if the resulting binary should be compiled with
+# debug information data or not.
+# Enabling debug will increase resulting file size and decrease performance.
+# Default: "false"
+DEBUG ?= false
 
 # OUT_DIR sets the Path where the kubenab Build Artifact will be puttet
 OUT_DIR ?=./bin
 COMMIT := $(shell git rev-parse HEAD)
 LD_FLAGS ?=-X main.Version=$(shell git-semver -prefix v) -X main.Commit=${COMMIT} -X main.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
+C_FLAGS := ""
 
 # set default target to 'help'
 .DEFAULT_GOAL:=help
@@ -28,10 +31,22 @@ build: ## compile the `kubenab` project
 
 	@echo "++ Pulling Git Tags ++"
 	git fetch --tags
+
+	@# strip debug informations if !DEBUG
+ifeq "$(DEBUG)" "true"
+	strip --strip-debug --strip-unneeded \
+		--remove-section='!.go.buildinfo' $(OUT_DIR)/kubenab
+else
+	@# add 'debug' LD flag
+	C_FLAGS+="-tags 'debug'"
+endif
+
 	@echo "++ Building kubenab go binary..."
 	mkdir -p bin
-	go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="$(LD_FLAGS)" \
+	go build -a --installsuffix cgo --ldflags="$(LD_FLAGS)" \
 		-o $(OUT_DIR)/kubenab
+
+
 
 .PHONY: image
 image: ## build the Docker Image
