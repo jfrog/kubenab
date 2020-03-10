@@ -3,10 +3,9 @@
 STRIP_DEBUG ?=-tags 'strip_debug'
 
 # OUT_DIR sets the Path where the kubenab Build Artifact will be puttet
-OUT_DIR ?=../../../bin
-GIT_HASH=$(shell git rev-parse HEAD)
-BUILD_DATE=$(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
-APP_VERSION=$(shell git describe --abbrev=0 --tags)
+OUT_DIR ?=./bin
+COMMIT := $(shell git rev-parse HEAD)
+LD_FLAGS ?=-X main.Version=$(shell git-semver -prefix v) -X main.Commit=${COMMIT} -X main.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
 
 # set default target to 'help'
 .DEFAULT_GOAL:=help
@@ -16,6 +15,7 @@ APP_VERSION=$(shell git describe --abbrev=0 --tags)
 # source: https://blog.thapaliya.com/posts/well-documented-makefiles/
 help:
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
 
 ##@ Building
 
@@ -30,9 +30,7 @@ build: ## compile the `kubenab` project
 	git fetch --tags
 	@echo "++ Building kubenab go binary..."
 	mkdir -p bin
-	go build $(STRIP_DEBUG) \
-		-a --installsuffix cgo \
-		--ldflags="-s -X main.version=$(APP_VERSION) -X main.date=$(BUILD_DATE) -X main.commit=$(GIT_HASH)" \
+	go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="$(LD_FLAGS)" \
 		-o $(OUT_DIR)/kubenab
 
 .PHONY: image
