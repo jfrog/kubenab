@@ -25,7 +25,7 @@ help:
 ifeq ($(DEBUG),true)
 # add 'debug' LD flag and enable debug features in binary
 C_FLAGS+= -tags 'debug'
-LD_FLAGS+= -X github.com/jfrog/kubenab/internal.DebugAvail=true
+LD_FLAGS+= -X github.com/jfrog/kubenab/internal.BuildFeatures=debug,
 endif
 
 .PHONY: build
