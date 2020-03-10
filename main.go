@@ -1,52 +1,36 @@
 package main
 
 import (
-	"crypto/tls"
-	"flag"
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-)
-
-var (
-	tlsCertFile string
-	tlsKeyFile  string
+	"github.com/jfrog/kubenab/cmd"
+	_log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	// print Version Informations
 	log.Printf("Starting kubenab version %s - %s - %s", version, date, commit)
 
+	// initialize logger
+	initLogger()
+
+	cmd.Execute()
+
 	// check if all required Flags are set and in a correct Format
-	checkArguments()
+	// checkArguments()
+}
 
-	flag.StringVar(&tlsCertFile, "tls-cert", "/etc/admission-controller/tls/tls.crt", "TLS certificate file.")
-	flag.StringVar(&tlsKeyFile, "tls-key", "/etc/admission-controller/tls/tls.key", "TLS key file.")
-	flag.Parse()
+// initLogger initializes the logrus logger – since it 'pkg/log' wrapps its
+// functions.
+func initLogger() {
+	// Log as JSON instead of the default ASCII formatter.
+	_log.SetFormatter(&_log.JSONFormatter{})
 
-	os.LookupEnv("PORT")
-	port := "4443"
-	if envPort, exists := os.LookupEnv("PORT"); exists {
-		port = envPort
-	}
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	_log.SetOutput(os.Stdout)
 
-	promRegistry := prometheus.NewRegistry()
-	promRegistry.MustRegister(httpRequestsTotal)
-	promRegistry.MustRegister(httpRequestDuration)
-
-	http.Handle("/metrics", promhttp.HandlerFor(promRegistry, promhttp.HandlerOpts{}))
-	http.HandleFunc("/ping", healthCheck)
-	http.HandleFunc("/mutate", mutateAdmissionReviewHandler)
-	http.HandleFunc("/validate", validateAdmissionReviewHandler)
-	s := http.Server{
-		Addr: ":" + port,
-		TLSConfig: &tls.Config{
-			ClientAuth: tls.NoClientCert,
-		},
-	}
-
-	log.Fatal(s.ListenAndServeTLS(tlsCertFile, tlsKeyFile))
+	// Only log the info severity or above (default)
+	_log.SetLevel(_log.InfoLevel)
 }
