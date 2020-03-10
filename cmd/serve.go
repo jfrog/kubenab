@@ -24,6 +24,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/jfrog/kubenab/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -42,5 +43,5 @@ func init() {
 	rootCmd.AddCommand(serveCmd)
 
 	serveCmd.Flags().StringVar(&internal.ListenAddr, "listen", "0.0.0.0", "listen address")
-	serveCmd.Flags().StringVar(&internal.ListenPort, "port", "8080", "listen port")
+	serveCmd.Flags().UintVar(&internal.ListenPort, "port", 8080, "listen port")
 }
