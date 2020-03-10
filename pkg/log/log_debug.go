@@ -1,4 +1,4 @@
-// +build !strip_debug
+// +build debug
 
 package log
 

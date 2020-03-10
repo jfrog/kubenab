@@ -33,7 +33,7 @@ build: ## compile the `kubenab` project
 	git fetch --tags
 
 	@# strip debug informations if !DEBUG
-ifeq "$(DEBUG)" "true"
+ifeq "$(DEBUG)" "false"
 	strip --strip-debug --strip-unneeded \
 		--remove-section='!.go.buildinfo' $(OUT_DIR)/kubenab
 else
