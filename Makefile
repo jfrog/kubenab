@@ -5,10 +5,10 @@
 DEBUG ?= false
 
 # OUT_DIR sets the Path where the kubenab Build Artifact will be puttet
-OUT_DIR ?=./bin
-COMMIT := $(shell git rev-parse HEAD)
-LD_FLAGS ?=-X internal.Version=$(shell git-semver -prefix v) -X internal.Commit=${COMMIT} -X internal.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
-C_FLAGS := ""
+OUT_DIR=./bin
+COMMIT= $(shell git rev-parse HEAD)
+LD_FLAGS=-X internal.Version=$(shell git-semver -prefix v) -X internal.Commit=${COMMIT} -X internal.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
+C_FLAGS=
 
 # set default target to 'help'
 .DEFAULT_GOAL:=help
@@ -22,6 +22,12 @@ help:
 
 ##@ Building
 
+ifeq ($(DEBUG),true)
+# add 'debug' LD flag and enable debug features in binary
+C_FLAGS+= -tags 'debug'
+LD_FLAGS+= -X internal.DebugAvail=true
+endif
+
 .PHONY: build
 build: ## compile the `kubenab` project
 	@export GOARCH=amd64
@@ -33,17 +39,14 @@ build: ## compile the `kubenab` project
 	git fetch --tags
 
 	@# strip debug informations if !DEBUG
-ifeq "$(DEBUG)" "false"
+ifeq ($(DEBUG),false)
 	strip --strip-debug --strip-unneeded \
 		--remove-section='!.go.buildinfo' $(OUT_DIR)/kubenab
-else
-	@# add 'debug' LD flag
-	C_FLAGS+="-tags 'debug'"
 endif
 
 	@echo "++ Building kubenab go binary..."
 	mkdir -p bin
-	go build -a --installsuffix cgo --ldflags="$(LD_FLAGS)" \
+	go build -a --installsuffix cgo --ldflags="$(LD_FLAGS)" $(C_FLAGS) \
 		-o $(OUT_DIR)/kubenab
 
 
