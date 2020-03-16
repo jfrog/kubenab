@@ -1,0 +1,57 @@
+---
+# PLEASE DO NOT CHANGE THIS VALUE!
+# IT'S NEEDED TO PROVIDE BACKWARD-COMPATIBILITY!!
+version: "1"
+
+preRelease:
+        # if you set 'detect' to true, changelog-go will automatically detect
+        # if the released Version is an pre-release Version, so a User or CI/CD
+        # has not to manually set the pre-release Flag.
+        # To detect such pre-releases changelog-go is using the SemVer
+        # definition of a pre-release.
+        #
+        # Example:
+        #       1.0.0-alpha.1
+        #       1.0.0-beta
+        #       1.0.0-beta.2
+        #       1.0.0-rc.1
+        detect: true
+
+        # setting 'deletePreRelease' to true will cause changelog-go to delete
+        # the written Pre-Releases from the CHANGELOG.md file when releasing an
+        # non-pre-release Version (eg. "1.0.0").
+        # If 'deletePreRelease' and 'foldPreReleases' are enabled at the same time
+        # then 'deletePreRelease' will be prioritised.
+        deletePreRelease: false
+
+        # 'foldPreReleases' will "fold" the Pre-Release entries if you release
+        # an non pre-release.
+        # To get this Feature working changelog-go uses the HTML tag "<details>"
+        foldPreReleases: true
+
+# entry defines the Changelog Entry which will be written down to disk (the
+# single Changelog Entry File).
+entry:
+        # 'author' enables if changelog-go should grab the author and write it
+        # down to the Changelog-Entry.
+        # This can be (later) used to generate statics.
+        author: true
+
+
+# changelog represents the general Configuration about the resulting
+# CHANGELOG.md.
+changelog:
+        # entryPath sets the Path where changelog-go saves and searches the
+        # Changelog Entries.
+        # The Path is an relative path and the beginning is $GOROOT
+        # If the directory does not exists, changelog-go will create it.
+        entryPath: ".changelogs"
+
+        # set the Path where the Changelog Output will be stored.
+        changelog: "CHANGELOG.md"
+
+        # customScheme describes if 'changelog-go' should search for an custom
+        # CHANGELOG.md Output Scheme in `changelog.entryPath`.
+        # If this is set to 'false' (default) then 'changelog-go' will use the
+        # default one.
+        customScheme: false

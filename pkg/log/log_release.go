@@ -1,8 +1,6 @@
-// +build strip_debug,!debug
+// +build !debug
 
 package log
-
-func Debug(v ...interface{}) {}
 
 func Debugln(v ...interface{}) {}
 

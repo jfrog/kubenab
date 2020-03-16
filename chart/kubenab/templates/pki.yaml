@@ -3,7 +3,7 @@
 ---
 # Create a selfsigned Issuer, in order to create a root CA certificate for
 # signing kubenab serving certificates
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
   name: {{ include "kubenab.selfSignedIssuer" . }}
@@ -14,7 +14,7 @@ spec:
   selfSigned: {}
 ---
 # Generate a CA Certificate used to sign certificates for the kubenab
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: {{ include "kubenab.rootCACertificate" . }}
@@ -30,7 +30,7 @@ spec:
   isCA: true
 ---
 # Create an Issuer that uses the above generated CA certificate to issue certs
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
   name: {{ include "kubenab.rootCAIssuer" . }}
@@ -42,7 +42,7 @@ spec:
     secretName: {{ include "kubenab.rootCACertificate" . }}
 ---
 # Finally, generate a serving certificate for the kubenab to use
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: {{ include "kubenab.servingCertificate" . }}

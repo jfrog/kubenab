@@ -6,7 +6,7 @@ metadata:
   labels:
 {{ include "kubenab.labels" . | indent 4 }}
   annotations:
-    certmanager.k8s.io/inject-ca-from: "{{ .Release.Namespace }}/{{ include "kubenab.servingCertificate" . }}"
+    cert-manager.io/inject-ca-from: "{{ .Release.Namespace }}/{{ include "kubenab.servingCertificate" . }}"
 webhooks:
 - name: kubenab-mutate.k8s.io
   rules:

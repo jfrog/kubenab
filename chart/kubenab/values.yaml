@@ -11,6 +11,7 @@ image:
   # Note that by default we use appVersion to get image tag
   # tag:
   pullPolicy: IfNotPresent
+  port: 4443
 
 service:
   type: ClusterIP
@@ -111,6 +112,11 @@ resources:
   requests:
     cpu: 50m
     memory: 64Mi
+
+# Defines priorityClass to run the deployment
+priorityClass:
+    enabled: true
+    name: system-cluster-critical
 
 ## Role Based Access Control
 rbac:

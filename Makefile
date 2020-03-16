@@ -1,25 +1,66 @@
-# 'strip_debug' will increase the Performance of kubenab
-# You can disable this by setting `STRIP_DEBUG=""`
-STRIP_DEBUG ?=-tags 'strip_debug'
+# DEBUG enables or disables if the resulting binary should be compiled with
+# debug information data or not.
+# Enabling debug will increase resulting file size and decrease performance.
+# Default: "false"
+DEBUG ?= false
+
 # OUT_DIR sets the Path where the kubenab Build Artifact will be puttet
-OUT_DIR ?=../../../bin
-GIT_HASH=$(shell git rev-parse HEAD)
-BUILD_DATE=$(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
-APP_VERSION=$(shell git describe --abbrev=0 --tags)
+OUT_DIR=./bin
+COMMIT= $(shell git rev-parse HEAD)
+LD_FLAGS=-X github.com/jfrog/kubenab/internal.Version=$(shell git-semver -prefix v) -X github.com/jfrog/kubenab/internal.Commit=${COMMIT} -X github.com/jfrog/kubenab/internal.BuildDate='$(shell date -u +%Y-%m-%d_%T)'
+C_FLAGS=
+
+# set default target to 'help'
+.DEFAULT_GOAL:=help
+
+
+.PHONY: help
+# source: https://blog.thapaliya.com/posts/well-documented-makefiles/
+help:
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+
+##@ Building
+
+ifeq ($(DEBUG),true)
+# add 'debug' LD flag and enable debug features in binary
+C_FLAGS+= -tags 'debug'
+LD_FLAGS+= -X github.com/jfrog/kubenab/internal.BuildFeatures=debug,
+endif
+
+.PHONY: build
+build: ## compile the `kubenab` project
+	@export GOARCH=amd64
+	@export CGO_ENABLED=0
+	@export GO111MODULE=on
+	@export GOPROXY=https://gocenter.io
+
+	@echo "++ Pulling Git Tags ++"
+	git fetch --tags
+
+	@# strip debug informations if !DEBUG
+ifeq ($(DEBUG),false)
+	strip --strip-debug --strip-unneeded \
+		--remove-section='!.go.buildinfo' $(OUT_DIR)/kubenab
+endif
+
+	@echo "++ Building kubenab go binary..."
+	mkdir -p bin
+	go build -a --installsuffix cgo --ldflags="$(LD_FLAGS)" $(C_FLAGS) \
+		-o $(OUT_DIR)/kubenab
+
+
 
 .PHONY: image
-image:
+image: ## build the Docker Image
 	@echo "++ Building kubenab docker image..."
 	docker build -t kubenab .
 
-.PHONY: build
-build: export GOARCH=amd64
-build: export CGO_ENABLED=0
-build: export GO111MODULE=on
-build: export GOPROXY=https://gocenter.io
-build:
-	@echo "++ Pulling Git Tags ++"
-	git fetch --tags
-	@echo "++ Building kubenab go binary..."
-	mkdir -p bin
-	cd cmd/kubenab && go build $(STRIP_DEBUG) -a --installsuffix cgo --ldflags="-s -X main.version=$(APP_VERSION) -X main.date=$(BUILD_DATE) -X main.commit=$(GIT_HASH)" -o $(OUT_DIR)/kubenab
+##@ Developing
+
+.PHONY: dev-setup
+dev-setup: ## install required tools to get started with developing
+	# go one directory backwards to prevent that `git-semver` will be added
+	# to `go.(mod|sum)`
+	cd ..
+	go get github.com/mdomke/git-semver@master
