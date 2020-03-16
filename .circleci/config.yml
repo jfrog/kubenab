@@ -1,8 +1,9 @@
 version: 2
 jobs:
-  build:
-    machine: true
+  untagged-build:
+    docker:
+      - image: circleci/golang:1.13
+    working_directory: /go/src/github.com/jfrog/kubenab
     steps:
       - checkout
-      # build the application
       - run: make build
