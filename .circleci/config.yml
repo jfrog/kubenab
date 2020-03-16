@@ -4,5 +4,5 @@ jobs:
     machine: true
     steps:
       - checkout
-      # build the application image
-      - run: make image
+      # build the application
+      - run: make build
