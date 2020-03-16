@@ -1,7 +1,9 @@
 # Kubenab
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jfrog/kubenab?style=flat-square)](https://goreportcard.com/report/github.com/jfrog/kubenab)
 [![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/jfrog/kubenab)
+[![CircleCI](https://circleci.com/gh/jfrog/kubenab/tree/master.svg?style=svg)](https://circleci.com/gh/jfrog/kubenab/tree/master)
 [![Release](https://img.shields.io/github/release/jfrog/kubenab.svg?style=flat-square)](https://github.com/jfrog/kubenab/releases/latest)
 
 ### What does Kubenab do?
