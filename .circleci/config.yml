@@ -7,3 +7,8 @@ jobs:
     steps:
       - checkout
       - run: make build
+workflows:
+  version: 2
+  untagged-build:
+    jobs:
+      - untagged-build
