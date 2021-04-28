@@ -113,6 +113,41 @@ resources:
     cpu: 50m
     memory: 64Mi
 
+# Defines securityContext for deployment to remove all permissions
+# that are not needed.
+securityContext:
+  enabled: true
+  privileged: false
+  runAsNonRoot: true
+  runAsUser: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+# Defines livenessProbe to monitor deployment
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 1
+  failureThreshold: 10
+  periodSeconds: 10
+  httpGet:
+    path: "/ping"
+    port: 4443
+    scheme: HTTPS
+
+# Defines readinessProbe to monitor deployment
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 1
+  failureThreshold: 10
+  periodSeconds: 10
+  httpGet:
+    path: "/ping"
+    port: 4443
+    scheme: HTTPS
+
 # Defines priorityClass to run the deployment
 priorityClass:
     enabled: true
