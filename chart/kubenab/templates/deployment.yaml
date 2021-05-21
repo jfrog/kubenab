@@ -56,15 +56,15 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
         {{- if .Values.securityContext.enabled }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- omit .Values.securityContext "enabled" | toYaml | nindent 12 }}
         {{- end }}
         {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
-          {{- toYaml .Values.livenessProbe | nindent 12 }}
+            {{- omit .Values.livenessProbe "enabled" | toYaml | nindent 12 }}
         {{- end }}
         {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
+            {{- omit .Values.readinessProbe "enabled" | toYaml | nindent 12 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
